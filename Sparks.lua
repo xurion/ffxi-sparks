@@ -1,0 +1,62 @@
+_addon.name = 'Sparks'
+_addon.author = 'Dean James (Xurion of Bismarck)'
+_addon.command = 'sparks'
+_addon.version = '1.0.0'
+
+texts = require('texts')
+config = require('config')
+packets = require('packets')
+
+settings = config.load({})
+text_box = texts.new(settings)
+
+sparks_packet_id = 0x110
+
+windower.register_event('login', function()
+  local sparks_count = get_sparks()
+  regenerate_text(sparks_count, 99999)
+end)
+
+windower.register_event('logout', function()
+  text_box:visible(false)
+end)
+
+function regenerate_text(sparks_count, sparks_max)
+	local normal = '\\cs(255,255,255)'
+  local warning = '\\cs(255,170,0)'
+  local danger = '\\cs(255,0,0)'
+
+  local text = 'Sparks: '
+
+  if sparks_max == sparks_count then
+    text = text .. danger
+  elseif sparks_max - sparks_count < 10000 then
+    text = text .. warning
+  else
+    text = text .. normal
+  end
+
+  text = text .. sparks_count .. '\\cr'
+
+	text_box:text(text)
+	text_box:visible(true)
+end
+
+function get_sparks_value_from_packet(packet)
+  local parsed = packets.parse('incoming', packet)
+  local total_sparks = 0
+  if parsed['_unknown1'] == 1 then --This field is used to determine if your sparks are over 65,536. If so, the 'Sparks Total' field is only the value above that.
+    total_sparks = 65536
+  end
+  total_sparks = total_sparks + parsed['Sparks Total']
+  return total_sparks
+end
+
+function get_sparks()
+  local sparks_packet = windower.packets.last_incoming(sparks_packet_id)
+  if sparks_packet == nil then
+    return 0
+  else
+    return get_sparks_value_from_packet(sparks_packet)
+  end
+end
