@@ -1,6 +1,5 @@
 _addon.name = 'Sparks'
 _addon.author = 'Dean James (Xurion of Bismarck)'
-_addon.command = 'sparks'
 _addon.version = '1.0.0'
 
 texts = require('texts')
