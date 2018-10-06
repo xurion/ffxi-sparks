@@ -16,6 +16,11 @@ function init()
   regenerate_text(sparks_count, 99999)
 end
 
+function comma_value(n) --credit http://richard.warburton.it
+	local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
+	return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
+end
+
 windower.register_event('load', function()
   if windower.ffxi.get_player() ~= nil then
     init()
@@ -43,7 +48,7 @@ function regenerate_text(sparks_count, sparks_max)
     text = text .. normal
   end
 
-  text = text .. sparks_count .. '\\cr'
+  text = text .. comma_value(sparks_count) .. '\\cr'
 
 	text_box:text(text)
   text_box:show()
