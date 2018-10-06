@@ -11,13 +11,21 @@ text_box = texts.new(settings)
 
 sparks_packet_id = 0x110
 
-windower.register_event('login', function()
+function init()
   local sparks_count = get_sparks()
   regenerate_text(sparks_count, 99999)
+end
+
+windower.register_event('load', function()
+  if windower.ffxi.get_player() ~= nil then
+    init()
+  end
 end)
 
+windower.register_event('login', init)
+
 windower.register_event('logout', function()
-  text_box:visible(false)
+  text_box:hide()
 end)
 
 function regenerate_text(sparks_count, sparks_max)
@@ -38,7 +46,7 @@ function regenerate_text(sparks_count, sparks_max)
   text = text .. sparks_count .. '\\cr'
 
 	text_box:text(text)
-	text_box:visible(true)
+  text_box:show()
 end
 
 function get_sparks_value_from_packet(packet)
@@ -59,3 +67,9 @@ function get_sparks()
     return get_sparks_value_from_packet(sparks_packet)
   end
 end
+
+windower.register_event('incoming chunk', function(id, packet)
+  if id == sparks_packet_id then
+    init()
+  end
+end)
