@@ -6,7 +6,12 @@ texts = require('texts')
 config = require('config')
 packets = require('packets')
 
-settings = config.load({})
+settings = config.load({
+  bg = {
+    alpha = 75
+  },
+  padding = 3
+})
 text_box = texts.new(settings)
 
 sparks_packet_id = 0x110
