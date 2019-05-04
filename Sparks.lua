@@ -22,8 +22,8 @@ function init()
 end
 
 function comma_value(n) --credit http://richard.warburton.it
-	local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
-	return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
+  local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
+  return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 end
 
 windower.register_event('load', function()
@@ -39,7 +39,7 @@ windower.register_event('logout', function()
 end)
 
 function regenerate_text(sparks_count, sparks_max)
-	local normal = '\\cs(255,255,255)'
+  local normal = '\\cs(255,255,255)'
   local warning = '\\cs(255,170,0)'
   local danger = '\\cs(255,0,0)'
 
@@ -55,7 +55,7 @@ function regenerate_text(sparks_count, sparks_max)
 
   text = text .. comma_value(sparks_count) .. '\\cr'
 
-	text_box:text(text)
+  text_box:text(text)
   text_box:show()
 end
 
